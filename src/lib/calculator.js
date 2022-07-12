@@ -62,7 +62,8 @@ export const handleClick = (e, text, temp, calculated, setText, setTemp, setCalc
     }
 
     if (value == "." && text.includes(value)) return null;
-    if (!isOperator(value)) setText(text + value);
+    if (!isOperator(value)) isOperator(text[text.length - 1]) ? setText(value) : setText(text + value);
+
     setTemp(temp + value);
     setCalculated(false);
     // when first char is 0 and input value is not ., then replace 0 with current input value
