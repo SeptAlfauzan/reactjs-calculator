@@ -1,15 +1,6 @@
+export const isOperator = (e) => "/+-*".includes(e) ? true : false;
 
-export const isOperator = (e) => {
-    const operations = "/+-*";
-    if (operations.includes(e)) return true;
-    return false;
-};
-
-export const isNegativeRemover = (target) => {
-    const list = "+/*";
-    if (list.includes(target)) return true;
-    return false;
-};
+export const isNegativeRemover = (target) => "+/*".includes(target) ? true : false;
 
 export const replaceOperator = (target, replacement) => {
     const arrayTarget = target.split("");
@@ -25,7 +16,6 @@ export const handleCalculate = (temp, setText, setTemp, setCalculated) => {
     setText(`${eval(array.join(""))}`);
     setTemp(`${eval(array.join(""))}`);
     setCalculated(true);
-    return;
 };
 
 export const handleDelete = (text, temp, setText, setTemp) => {
@@ -57,23 +47,22 @@ export const handleClick = (e, text, temp, calculated, setText, setTemp, setCalc
         setCalculated(false);
         const lastChar = temp[temp.length - 1];
 
-        if (isNegativeRemover(value)) {
-            if (isOperator(lastChar) && isNegativeRemover(value))
-                return setTemp(replaceOperator(temp, value));
+        if (!isNegativeRemover(value))
+            return setTemp(temp + value);
 
-            const copyArr = temp.slice().split("");
-            copyArr.pop();
-            copyArr.push(value);
-            setTemp(copyArr.join(""));
-        }
-        return setTemp(temp + value);
+        if (isOperator(lastChar) && isNegativeRemover(value))
+            return setTemp(replaceOperator(temp, value));
+
+        const copyArr = temp.slice().split("");
+        copyArr.pop();
+        copyArr.push(value);
+        setTemp(copyArr.join(""));
     }
 
     if (value == "." && text.includes(value)) return null;
     if (!isOperator(value)) setText(text + value);
     setTemp(temp + value);
     setCalculated(false);
-
     // when first char is 0 and input value is not ., then replace 0 with current input value
     if (text[0] == "0" && value != "." && text.length == 1)
         setText(text.slice().replace("0", value));
