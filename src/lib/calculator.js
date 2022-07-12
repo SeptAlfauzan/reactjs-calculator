@@ -2,6 +2,8 @@ export const isOperator = (e) => "/+-*".includes(e) ? true : false;
 
 export const isNegativeRemover = (target) => "+/*".includes(target) ? true : false;
 
+export const isDoubleNegative = (current, previous) => current == '-' && previous == '-' ? true : false;
+
 export const replaceOperator = (target, replacement) => {
     const arrayTarget = target.split("");
     while (isOperator(arrayTarget[arrayTarget.length - 1])) arrayTarget.pop();
@@ -47,11 +49,11 @@ export const handleClick = (e, text, temp, calculated, setText, setTemp, setCalc
         setCalculated(false);
         const lastChar = temp[temp.length - 1];
 
-        if (!isNegativeRemover(value))
-            return setTemp(temp + value);
+        if (isDoubleNegative(lastChar, value)) return setTemp(replaceOperator(temp, '+'));
 
-        if (isOperator(lastChar) && isNegativeRemover(value))
-            return setTemp(replaceOperator(temp, value));
+        if (!isNegativeRemover(value)) return setTemp(temp + value);
+
+        if (isOperator(lastChar) && isNegativeRemover(value)) return setTemp(replaceOperator(temp, value));
 
         const copyArr = temp.slice().split("");
         copyArr.pop();
@@ -64,6 +66,5 @@ export const handleClick = (e, text, temp, calculated, setText, setTemp, setCalc
     setTemp(temp + value);
     setCalculated(false);
     // when first char is 0 and input value is not ., then replace 0 with current input value
-    if (text[0] == "0" && value != "." && text.length == 1)
-        setText(text.slice().replace("0", value));
+    if (text[0] == "0" && value != "." && text.length == 1) setText(text.slice().replace("0", value));
 };
